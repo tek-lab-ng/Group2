@@ -130,7 +130,7 @@ public class AccountsServiceImpl  implements IAccountsService {
         }
         return false;
     }
-    private void generateLoanId(Loan loan) {
+    private void generateLoanNumber(Loan loan) {
         long randomAccNumber = 1000000000 + new Random().nextInt(900000000);
         loan.setLoanNumber(String.valueOf(randomAccNumber));
     }
@@ -141,7 +141,7 @@ public class AccountsServiceImpl  implements IAccountsService {
             Loan loan = LoanMapper.maptoLoan(loanDTO, new Loan());
             loan.setAmountPaid(0);
             loan.setOutstandingAmount((int) ((loan.getTotalLoan() * 0.2) + loan.getTotalLoan()));
-            generateLoanId(loan);
+            generateLoanNumber(loan);
             Loan loanReturned = loanRepository.save(loan);
             Customer customerReturned = customer.get();
             return new LoanObj(customerReturned.getName(), loanReturned.getTotalLoan(), loanReturned.getOutstandingAmount());
