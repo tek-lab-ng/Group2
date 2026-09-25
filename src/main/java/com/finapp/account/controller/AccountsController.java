@@ -4,15 +4,11 @@ package com.finapp.account.controller;
 import com.finapp.account.constants.AccountsConstants;
 import com.finapp.account.constants.LoanConstant;
 import com.finapp.account.dto.*;
-import com.finapp.account.entity.Loan;
 import com.finapp.account.service.impl.AccountsServiceImpl;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.finapp.account.service.IAccountsService;
 
 
 @RestController
@@ -64,16 +60,16 @@ public class AccountsController {
     }
 
     @PostMapping("/api/loan")
-    public ResponseEntity<?> createLoanRequest(@RequestBody LoanDTO loanDTO) {
-        LoanObj loanobj = accountsService.createLoan(loanDTO);
-        if (loanobj == null) {
+    public ResponseEntity<?> createLoanRequest(@RequestBody LoanRequestDTO loanRequestDTO) {
+        LoanReturnDTO loanReturnObj = accountsService.createLoan(loanRequestDTO);
+        if (loanReturnObj == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoanResponseDTO(LoanConstant.PHONE_NUMBER));
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new LoanResponseDTO(LoanConstant.MESSAGE_201,
-                loanobj.getCustomer_name(),
-                loanobj.getTotal_amount(),
-                loanobj.getOutstanding_balance()));
+                loanReturnObj.getCustomer_name(),
+                loanReturnObj.getTotal_amount(),
+                loanReturnObj.getOutstanding_balance()));
     }
 
 

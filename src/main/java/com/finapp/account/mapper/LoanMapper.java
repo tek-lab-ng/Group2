@@ -1,14 +1,14 @@
 package com.finapp.account.mapper;
 
-import com.finapp.account.dto.LoanDTO;
+import com.finapp.account.dto.LoanRequestDTO;
 import com.finapp.account.entity.Loan;
 
 public class LoanMapper {
 
-    public static Loan maptoLoan(LoanDTO loanDTO, Loan loan){
-        loan.setLoanType(loanDTO.getLoan_type());
-        loan.setMobileNumber(loanDTO.getMobile_number());
-        loan.setTotalLoan(loanDTO.getTotal_loan());
+    public static Loan maptoLoan(LoanRequestDTO loanRequestDTO, Loan loan){
+        loan.setLoanType(loanRequestDTO.getLoan_type());
+        loan.setMobileNumber(loanRequestDTO.getMobile_number());
+        loan.setTotalLoan(loanRequestDTO.getTotal_loan());
 
         return loan;
     }

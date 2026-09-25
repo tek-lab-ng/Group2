@@ -3,8 +3,8 @@ package com.finapp.account.service.impl;
 
 import com.finapp.account.dto.AccountsDto;
 import com.finapp.account.dto.CustomerDto;
-import com.finapp.account.dto.LoanDTO;
-import com.finapp.account.dto.LoanObj;
+import com.finapp.account.dto.LoanRequestDTO;
+import com.finapp.account.dto.LoanReturnDTO;
 import com.finapp.account.entity.Account;
 import com.finapp.account.entity.Customer;
 import com.finapp.account.entity.Loan;
@@ -135,16 +135,16 @@ public class AccountsServiceImpl  implements IAccountsService {
         loan.setLoanNumber(String.valueOf(randomAccNumber));
     }
 
-    public LoanObj createLoan(LoanDTO loanDTO){
-        Optional<Customer> customer = Optional.ofNullable(customerRepository.findByMobileNumber(loanDTO.getMobile_number()));
+    public LoanReturnDTO createLoan(LoanRequestDTO loanRequestDTO){
+        Optional<Customer> customer = Optional.ofNullable(customerRepository.findByMobileNumber(loanRequestDTO.getMobile_number()));
         if(customer.isPresent()){
-            Loan loan = LoanMapper.maptoLoan(loanDTO, new Loan());
+            Loan loan = LoanMapper.maptoLoan(loanRequestDTO, new Loan());
             loan.setAmountPaid(0);
             loan.setOutstandingAmount((int) ((loan.getTotalLoan() * 0.2) + loan.getTotalLoan()));
             generateLoanNumber(loan);
             Loan loanReturned = loanRepository.save(loan);
             Customer customerReturned = customer.get();
-            return new LoanObj(customerReturned.getName(), loanReturned.getTotalLoan(), loanReturned.getOutstandingAmount());
+            return new LoanReturnDTO(customerReturned.getName(), loanReturned.getTotalLoan(), loanReturned.getOutstandingAmount());
         }
         return null;
     }
