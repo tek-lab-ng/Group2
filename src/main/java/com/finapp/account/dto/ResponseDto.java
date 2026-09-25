@@ -1,5 +1,6 @@
 package com.finapp.account.dto;
 
+import com.finapp.account.entity.Loan;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,4 +8,5 @@ import lombok.NoArgsConstructor;
 @Data @AllArgsConstructor @NoArgsConstructor
 public class ResponseDto {
     private String statusMsg;
+
 }

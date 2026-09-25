@@ -2,8 +2,9 @@ package com.finapp.account.controller;
 
 
 import com.finapp.account.constants.AccountsConstants;
-import com.finapp.account.dto.CustomerDto;
-import com.finapp.account.dto.ResponseDto;
+import com.finapp.account.constants.LoanConstant;
+import com.finapp.account.dto.*;
+import com.finapp.account.entity.Loan;
 import com.finapp.account.service.impl.AccountsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,19 @@ public class AccountsController {
                     .status(HttpStatus.EXPECTATION_FAILED)
                     .body(new ResponseDto(AccountsConstants.MESSAGE_417_DELETE));
         }
+    }
+
+    @PostMapping("/api/loan")
+    public ResponseEntity<?> createLoanRequest(@RequestBody LoanDTO loanDTO) {
+        LoanObj loanobj = accountsService.createLoan(loanDTO);
+        if (loanobj == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoanResponseDTO(LoanConstant.PHONE_NUMBER));
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new LoanResponseDTO(LoanConstant.MESSAGE_201,
+                loanobj.getCustomer_name(),
+                loanobj.getTotal_amount(),
+                loanobj.getOutstanding_balance()));
     }
 
 

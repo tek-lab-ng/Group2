@@ -1,18 +1,20 @@
 package com.finapp.account.service.impl;
 
 
-import com.finapp.account.constants.AccountsConstants;
 import com.finapp.account.dto.AccountsDto;
 import com.finapp.account.dto.CustomerDto;
+import com.finapp.account.dto.LoanDTO;
+import com.finapp.account.dto.LoanObj;
 import com.finapp.account.entity.Account;
 import com.finapp.account.entity.Customer;
-import com.finapp.account.exception.CustomerAlreadyExistsException;
+import com.finapp.account.entity.Loan;
 import com.finapp.account.mapper.AccountsMapper;
 import com.finapp.account.mapper.CustomerMapper;
+import com.finapp.account.mapper.LoanMapper;
 import com.finapp.account.repository.AccountsRepository;
 import com.finapp.account.repository.CustomerRepository;
+import com.finapp.account.repository.LoanRepository;
 import com.finapp.account.service.IAccountsService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,9 @@ public class AccountsServiceImpl  implements IAccountsService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private LoanRepository loanRepository;
 
 
 
@@ -125,6 +130,23 @@ public class AccountsServiceImpl  implements IAccountsService {
         }
         return false;
     }
+    private void generateLoanId(Loan loan) {
+        long randomAccNumber = 1000000000 + new Random().nextInt(900000000);
+        loan.setLoanNumber(String.valueOf(randomAccNumber));
+    }
 
+    public LoanObj createLoan(LoanDTO loanDTO){
+        Optional<Customer> customer = Optional.ofNullable(customerRepository.findByMobileNumber(loanDTO.getMobile_number()));
+        if(customer.isPresent()){
+            Loan loan = LoanMapper.maptoLoan(loanDTO, new Loan());
+            loan.setAmountPaid(0);
+            loan.setOutstandingAmount((int) ((loan.getTotalLoan() * 0.2) + loan.getTotalLoan()));
+            generateLoanId(loan);
+            loanRepository.save(loan);
+            Customer customerReturned = customer.get();
+            return new LoanObj(customerReturned.getName(), loan.getTotalLoan(), loan.getOutstandingAmount());
+        }
+        return null;
+    }
 
 }
