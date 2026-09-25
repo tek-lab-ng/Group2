@@ -142,9 +142,9 @@ public class AccountsServiceImpl  implements IAccountsService {
             loan.setAmountPaid(0);
             loan.setOutstandingAmount((int) ((loan.getTotalLoan() * 0.2) + loan.getTotalLoan()));
             generateLoanId(loan);
-            loanRepository.save(loan);
+            Loan loanReturned = loanRepository.save(loan);
             Customer customerReturned = customer.get();
-            return new LoanObj(customerReturned.getName(), loan.getTotalLoan(), loan.getOutstandingAmount());
+            return new LoanObj(customerReturned.getName(), loanReturned.getTotalLoan(), loanReturned.getOutstandingAmount());
         }
         return null;
     }
